@@ -1,6 +1,6 @@
 # Remote-Sync
 
-While migrating windows files from one PC to another missed an rsync tool on windows. With some ideas from forums, got some usable poweshell code:
+While migrating windows files from one PC to another missed an rsync tool on windows. With some ideas from forums, got some usable poweshell code, cpying files and preserving timestamps:
 
 ```powershell
 function rsync  {
@@ -35,7 +35,7 @@ function rsync  {
   }
 
   if ($sourceFiles -eq $null){
-    #Write-Host "Empty Directory encountered. Skipping file Copy."
+    Write-Host "o" -NoNewline
   } else
   {
     $diff_command="Compare-Object -ReferenceObject $sourceFiles -DifferenceObject $targetFiles"
@@ -43,12 +43,10 @@ function rsync  {
     $diff = Compare-Object -ReferenceObject $sourceFiles -DifferenceObject $targetFiles
 
     foreach ($f in $diff) {
-      #Write-Host "--> Indicator: $f.SideIndicator "
       if ($f.SideIndicator -eq "<=") {
         $fullSourceObject = $f.InputObject.FullName
         $fullTargetObject = $f.InputObject.FullName.Replace($source,$target)
 
-        #Write-Host "Attempt to copy the following <= SourceTarget: " $fullSourceObject
         Write-Host "." -NoNewline
 
         Copy-Item -Path $fullSourceObject -Destination $fullTargetObject
@@ -63,7 +61,6 @@ function rsync  {
         $fullSourceObject = $f.InputObject.FullName
         $fullTargetObject = $f.InputObject.FullName.Replace($target,$source)
 
-        #Write-Host "Attempt to copy the following => TargetSource: " $fullSourceObject
         Write-Host "." -NoNewline
 
         Copy-Item -Path $fullSourceObject -Destination $fullTargetObject
@@ -77,8 +74,6 @@ function rsync  {
         $fullSourceObject = $f.InputObject.FullName
         $fullTargetObject = $f.InputObject.FullName.Replace($target,$source)
 
-        #Write-Host "Removing files from Target that are not present in Source=> TargetSource: " $fullSourceObject
-        #Write-Host "FIles that are not in source: $fullSourceObject"
         Write-Host "x" -NoNewline
 
         Remove-Item  $fullSourceObject 
