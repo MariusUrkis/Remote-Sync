@@ -1,6 +1,6 @@
 # Remote-Sync
 
-While migrating windows files from one PC to another missed an rsync tool on windows. With some ideas from forums, got some usable poweshell code, cpying files and preserving timestamps:
+While migrating windows files from one PC to another missed an rsync tool on windows. With some ideas from forums, got some usable poweshell code, copying files and preserving timestamps:
 
 ```powershell
 function rsync  {
